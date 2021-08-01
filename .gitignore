@@ -1,0 +1,11 @@
+Natural.Aws.Lambda/bin
+Natural.Aws.Lambda/obj
+Natural.Aws.Mock/bin
+Natural.Aws.Mock/obj
+Natural.Aws/bin
+Natural.Aws/obj
+Natural.Common/bin
+Natural.Common/obj
+Natural.SandboxConsole/bin
+Natural.SandboxConsole/obj
+.vs
