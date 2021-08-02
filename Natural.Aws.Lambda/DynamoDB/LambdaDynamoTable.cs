@@ -33,7 +33,7 @@ namespace Natural.Aws.DynamoDB
         #region IDynamoTable implementation
 
         /// <summary>Getter for an item by its known key.</summary>
-        public async Task<IDynamoItem> GetItemByKey(string partitionKey, string sortKey)
+        public async Task<IDynamoItem> GetItemByKeyAsync(string partitionKey, string sortKey, string selectStatement)
         {
             // Try cast to report the error properly
             try
@@ -42,7 +42,7 @@ namespace Natural.Aws.DynamoDB
                 Amazon.DynamoDBv2.Model.GetItemRequest request = new Amazon.DynamoDBv2.Model.GetItemRequest
                 {
                     TableName = m_tableName,
-                    ProjectionExpression = "JsonData",
+                    ProjectionExpression = selectStatement,
                     Key = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>
                     {
                         { m_partitionKeyName, new Amazon.DynamoDBv2.Model.AttributeValue { S = partitionKey } },
@@ -59,6 +59,35 @@ namespace Natural.Aws.DynamoDB
             catch (Exception ex)
             {
                 throw new NaturalException($"Cannot get item from table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName}='{sortKey}').", ex);
+            }
+        }
+
+        /// <summary>Puts an item into the table.</summary>
+        public async Task PutItemAsync(string partitionKey, string sortKey, ItemUpdate itemUpdate)
+        {
+            // Try cast to report the error properly
+            try
+            {
+                // Insert into the database
+                Amazon.DynamoDBv2.Model.PutItemRequest request = new Amazon.DynamoDBv2.Model.PutItemRequest
+                {
+                    TableName = m_tableName,
+                    Item = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>()
+                };
+                request.Item.Add(m_partitionKeyName, new Amazon.DynamoDBv2.Model.AttributeValue { S = partitionKey });
+                request.Item.Add(m_sortKeyName, new Amazon.DynamoDBv2.Model.AttributeValue { S = sortKey });
+                if (itemUpdate.StringAttributes != null)
+                {
+                    foreach (KeyValuePair<string, string> stringAttribute in itemUpdate.StringAttributes)
+                    {
+                        request.Item.Add(stringAttribute.Key, new Amazon.DynamoDBv2.Model.AttributeValue { S = stringAttribute.Value });
+                    }
+                }
+                await m_dbClient.PutItemAsync(request);
+            }
+            catch (Exception ex)
+            {
+                throw new NaturalException($"Cannot put item into table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName}='{sortKey}').", ex);
             }
         }
 

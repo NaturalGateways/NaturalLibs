@@ -47,10 +47,17 @@ namespace Natural.Aws.DynamoDB
         #region IDynamoTable implementation
 
         /// <summary>Getter for an item by its known key.</summary>
-        public async Task<IDynamoItem> GetItemByKey(string partitionKey, string sortKey)
+        public async Task<IDynamoItem> GetItemByKeyAsync(string partitionKey, string sortKey, string selectStatement)
         {
             IDynamoItem item = m_itemListsBySortByPartition[partitionKey][sortKey].FirstOrDefault();
             return await Task.FromResult<IDynamoItem>(item);
+        }
+
+        /// <summary>Puts an item into the table.</summary>
+        public Task PutItemAsync(string partitionKey, string sortKey, ItemUpdate itemUpdate)
+        {
+            AddItem(partitionKey, sortKey, itemUpdate.StringAttributes);
+            return Task.CompletedTask;
         }
 
         #endregion
