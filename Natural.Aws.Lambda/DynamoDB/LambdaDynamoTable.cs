@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Natural.Aws.DynamoDB
@@ -59,6 +60,59 @@ namespace Natural.Aws.DynamoDB
             catch (Exception ex)
             {
                 throw new NaturalException($"Cannot get item from table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName}='{sortKey}').", ex);
+            }
+        }
+
+        /// <summary>Getter for all items in a partition.</summary>
+        public async Task<IEnumerable<IDynamoItem>> GetItemsAsync(string partitionKey, string sortKeyPrefix, string selectStatement)
+        {
+            // Try cast to report the error properly
+            try
+            {
+                // Create key condition
+                Dictionary<string, Amazon.DynamoDBv2.Model.Condition> keyConditions = new Dictionary<string, Amazon.DynamoDBv2.Model.Condition>
+                {
+                    {
+                        m_partitionKeyName,
+                        new Amazon.DynamoDBv2.Model.Condition()
+                        {
+                            ComparisonOperator = Amazon.DynamoDBv2.ComparisonOperator.EQ,
+                            AttributeValueList = new List<Amazon.DynamoDBv2.Model.AttributeValue>
+                            {
+                                new Amazon.DynamoDBv2.Model.AttributeValue { S = partitionKey }
+                            }
+                        }
+                    }
+                };
+                if (string.IsNullOrEmpty(sortKeyPrefix) == false)
+                {
+                    keyConditions.Add(m_sortKeyName, new Amazon.DynamoDBv2.Model.Condition()
+                    {
+                        ComparisonOperator = Amazon.DynamoDBv2.ComparisonOperator.BEGINS_WITH,
+                        AttributeValueList = new List<Amazon.DynamoDBv2.Model.AttributeValue>
+                        {
+                            new Amazon.DynamoDBv2.Model.AttributeValue { S = sortKeyPrefix }
+                        }
+                    });
+                }
+
+                // Create the request
+                Amazon.DynamoDBv2.Model.QueryRequest request = new Amazon.DynamoDBv2.Model.QueryRequest
+                {
+                    TableName = m_tableName,
+                    ProjectionExpression = selectStatement,
+                    KeyConditions = keyConditions
+                };
+
+                // Get the items
+                Amazon.DynamoDBv2.Model.QueryResponse response = m_dbClient.QueryAsync(request).Result;
+
+                // Return
+                return response.Items.Select(x => new LambdaDynamoItem(x));
+            }
+            catch (Exception ex)
+            {
+                throw new NaturalException($"Cannot get item from table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName} starts with '{sortKeyPrefix}').", ex);
             }
         }
 

@@ -9,6 +9,9 @@ namespace Natural.Aws.DynamoDB
         /// <summary>Getter for an item by its known key.</summary>
         Task<IDynamoItem> GetItemByKeyAsync(string partitionKey, string sortKey, string selectStatement);
 
+        /// <summary>Getter for all items in a partition.</summary>
+        Task<IEnumerable<IDynamoItem>> GetItemsAsync(string partitionKey, string sortKeyPrefix, string selectStatement);
+
         /// <summary>Puts an item into the table.</summary>
         Task PutItemAsync(string partitionKey, string sortKey, ItemUpdate itemUpdate);
     }

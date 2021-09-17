@@ -53,6 +53,18 @@ namespace Natural.Aws.DynamoDB
             return await Task.FromResult<IDynamoItem>(item);
         }
 
+        /// <summary>Getter for all items in a partition.</summary>
+        public async Task<IEnumerable<IDynamoItem>> GetItemsAsync(string partitionKey, string sortKeyPrefix, string selectStatement)
+        {
+            IEnumerable<KeyValuePair<string, List<IDynamoItem>>> baseItems = m_itemListsBySortByPartition[partitionKey].AsEnumerable();
+            if (string.IsNullOrEmpty(sortKeyPrefix) == false)
+            {
+                baseItems = baseItems.Where(x => x.Key.StartsWith(sortKeyPrefix));
+            }
+            IDynamoItem[] items = baseItems.SelectMany(x => x.Value).ToArray();
+            return await Task.FromResult<IEnumerable<IDynamoItem>>(items);
+        }
+
         /// <summary>Puts an item into the table.</summary>
         public Task PutItemAsync(string partitionKey, string sortKey, ItemUpdate itemUpdate)
         {
