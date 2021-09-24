@@ -36,7 +36,7 @@ namespace Natural.Aws.DynamoDB
         {
             if (this.StringValuesByKey?.ContainsKey(key) ?? false)
             {
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<JsonType>(this.StringValuesByKey[key]);
+                return System.Text.Json.JsonSerializer.Deserialize<JsonType>(this.StringValuesByKey[key]);
             }
             throw new NaturalException($"Cannot find item value with key '{key}'.");
         }
