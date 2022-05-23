@@ -137,6 +137,13 @@ namespace Natural.Aws.DynamoDB
                         request.Item.Add(stringAttribute.Key, new Amazon.DynamoDBv2.Model.AttributeValue { S = stringAttribute.Value });
                     }
                 }
+                if (itemUpdate.ObjectAttributes != null)
+                {
+                    foreach (KeyValuePair<string, object> objectAttribute in itemUpdate.ObjectAttributes)
+                    {
+                        request.Item.Add(objectAttribute.Key, new Amazon.DynamoDBv2.Model.AttributeValue { S = System.Text.Json.JsonSerializer.Serialize(objectAttribute.Value) });
+                    }
+                }
                 await m_dbClient.PutItemAsync(request);
             }
             catch (Exception ex)

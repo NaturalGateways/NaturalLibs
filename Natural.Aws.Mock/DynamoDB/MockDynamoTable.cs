@@ -68,7 +68,22 @@ namespace Natural.Aws.DynamoDB
         /// <summary>Puts an item into the table.</summary>
         public Task PutItemAsync(string partitionKey, string sortKey, ItemUpdate itemUpdate)
         {
-            AddItem(partitionKey, sortKey, itemUpdate.StringAttributes);
+            Dictionary<string, string> stringAttributes = new Dictionary<string, string>();
+            if (itemUpdate.StringAttributes != null)
+            {
+                foreach (KeyValuePair<string, string> stringAttribute in itemUpdate.StringAttributes)
+                {
+                    stringAttributes.Add(stringAttribute.Key, stringAttribute.Value);
+                }
+            }
+            if (itemUpdate.ObjectAttributes != null)
+            {
+                foreach (KeyValuePair<string, object> objectAttribute in itemUpdate.ObjectAttributes)
+                {
+                    stringAttributes.Add(objectAttribute.Key, System.Text.Json.JsonSerializer.Serialize(objectAttribute.Value));
+                }
+            }
+            AddItem(partitionKey, sortKey, stringAttributes);
             return Task.CompletedTask;
         }
 

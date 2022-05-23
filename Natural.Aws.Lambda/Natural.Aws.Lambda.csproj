@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>Natural.Aws</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.48" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.36" />
   </ItemGroup>
 
   <ItemGroup>

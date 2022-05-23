@@ -9,5 +9,8 @@ namespace Natural.Aws.DynamoDB
     {
         /// <summary>The string attributes.</summary>
         public Dictionary<string, string> StringAttributes { get; set; }
+
+        /// <summary>The string attributes.</summary>
+        public Dictionary<string, object> ObjectAttributes { get; set; }
     }
 }
