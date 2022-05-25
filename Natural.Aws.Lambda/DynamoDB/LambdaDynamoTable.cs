@@ -55,7 +55,11 @@ namespace Natural.Aws.DynamoDB
                 Amazon.DynamoDBv2.Model.GetItemResponse response = await m_dbClient.GetItemAsync(request);
                 
                 // Return
-                return new LambdaDynamoItem(response.Item);
+                if (response.IsItemSet)
+                {
+                    return new LambdaDynamoItem(response.Item);
+                }
+                return null;
             }
             catch (Exception ex)
             {
