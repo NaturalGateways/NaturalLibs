@@ -6,6 +6,8 @@ Natural.Aws/bin
 Natural.Aws/obj
 Natural.Common/bin
 Natural.Common/obj
+Natural.Json/bin
+Natural.Json/obj
 Natural.SandboxConsole/bin
 Natural.SandboxConsole/obj
 .vs
