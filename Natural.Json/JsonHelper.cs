@@ -48,6 +48,14 @@ namespace Natural.Json
                     return new JsonDictionaryObject((JObject)objectValue);
                 case "System.Boolean":
                     return new JsonBooleanObject((bool)objectValue);
+                case "System.Double":
+                    return new JsonDoubleObject((double)objectValue);
+                case "System.Int32":
+                    return new JsonLongObject((int)objectValue);
+                case "System.Int64":
+                    return new JsonLongObject((long)objectValue);
+                case "System.Single":
+                    return new JsonDoubleObject((float)objectValue);
             }
             return JsonNullObject.Null;
         }
