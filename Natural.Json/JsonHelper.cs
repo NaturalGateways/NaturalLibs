@@ -46,6 +46,8 @@ namespace Natural.Json
                     return new JsonArrayObject((JArray)objectValue);
                 case "Newtonsoft.Json.Linq.JObject":
                     return new JsonDictionaryObject((JObject)objectValue);
+                case "System.Boolean":
+                    return new JsonBooleanObject((bool)objectValue);
             }
             return JsonNullObject.Null;
         }
