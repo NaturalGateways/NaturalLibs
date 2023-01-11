@@ -56,6 +56,10 @@ namespace Natural.Json
                     return new JsonLongObject((long)objectValue);
                 case "System.Single":
                     return new JsonDoubleObject((float)objectValue);
+                case "System.String":
+                    return new JsonStringObject((string)objectValue);
+                case "System.Text.Json.JsonElement":
+                    return new SystemJsonObject((System.Text.Json.JsonElement)objectValue);
             }
             return JsonNullObject.Null;
         }
