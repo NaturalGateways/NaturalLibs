@@ -17,6 +17,32 @@ namespace Natural.Json
         public SystemJsonObject(JsonElement jsonElement)
         {
             m_jsonElement = jsonElement;
+
+            switch (m_jsonElement.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    this.ObjectType = JsonObjectType.Array;
+                    break;
+                case JsonValueKind.False:
+                case JsonValueKind.True:
+                    this.ObjectType = JsonObjectType.Boolean;
+                    break;
+                case JsonValueKind.Object:
+                    this.ObjectType = JsonObjectType.Dictionary;
+                    break;
+                case JsonValueKind.String:
+                    this.ObjectType = JsonObjectType.String;
+                    break;
+                case JsonValueKind.Number:
+                    {
+                        long value = 0;
+                        if (m_jsonElement.TryGetInt64(out value))
+                            this.ObjectType = JsonObjectType.Long;
+                        else
+                            this.ObjectType = JsonObjectType.Double;
+                        break;
+                    }
+            }
         }
 
         #endregion
@@ -24,28 +50,7 @@ namespace Natural.Json
         #region IJsonObject implementation
 
         /// <summary>Getter for the object type.</summary>
-        public JsonObjectType ObjectType
-        {
-            get
-            {
-                switch (m_jsonElement.ValueKind)
-                {
-                    case JsonValueKind.Array:
-                        return JsonObjectType.Array;
-                    case JsonValueKind.False:
-                    case JsonValueKind.True:
-                        return JsonObjectType.Boolean;
-                    case JsonValueKind.Object:
-                        return JsonObjectType.Dictionary;
-                    case JsonValueKind.String:
-                        return JsonObjectType.String;
-                    case JsonValueKind.Number:
-                        return JsonObjectType.Double;
-                    default:
-                        return JsonObjectType.Null;
-                }
-            }
-        }
+        public JsonObjectType ObjectType { get; private set; } = JsonObjectType.Null;
 
         /// <summary>Getter for the object as a string.</summary>
         public string AsString
