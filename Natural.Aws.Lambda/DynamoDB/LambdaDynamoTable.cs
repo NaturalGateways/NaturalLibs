@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThirdParty.Json.LitJson;
 
 namespace Natural.Aws.DynamoDB
 {
@@ -117,6 +118,44 @@ namespace Natural.Aws.DynamoDB
             catch (Exception ex)
             {
                 throw new NaturalException($"Cannot get item from table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName} starts with '{sortKeyPrefix}').", ex);
+            }
+        }
+
+        /// <summary>Getter for an item's value without creating an item object.</summary>
+        public async Task<ObjectType> GetItemValueAsNullableObjectAsync<ObjectType>(string partitionKey, string sortKey, string columnName)
+        {
+            // Try cast to report the error properly
+            try
+            {
+                // Create the request
+                Amazon.DynamoDBv2.Model.GetItemRequest request = new Amazon.DynamoDBv2.Model.GetItemRequest
+                {
+                    TableName = m_tableName,
+                    ProjectionExpression = columnName,
+                    Key = new Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>
+                    {
+                        { m_partitionKeyName, new Amazon.DynamoDBv2.Model.AttributeValue { S = partitionKey } },
+                        { m_sortKeyName, new Amazon.DynamoDBv2.Model.AttributeValue { S = sortKey } }
+                    }
+                };
+
+                // Get the item
+                Amazon.DynamoDBv2.Model.GetItemResponse response = await m_dbClient.GetItemAsync(request);
+
+                // Return
+                if (response.IsItemSet && response.Item.ContainsKey(columnName))
+                {
+                    string valueString = response.Item[columnName].S;
+                    if (string.IsNullOrEmpty(valueString) == false)
+                    {
+                        return System.Text.Json.JsonSerializer.Deserialize<ObjectType>(valueString);
+                    }
+                }
+                return default(ObjectType);
+            }
+            catch (Exception ex)
+            {
+                throw new NaturalException($"Cannot get item from table '{m_tableName}' where ({m_partitionKeyName}='{partitionKey}', {m_sortKeyName}='{sortKey}').", ex);
             }
         }
 
