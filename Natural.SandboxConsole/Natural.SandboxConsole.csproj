@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="4.0.7.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Natural.Aws.Lambda\Natural.Aws.Lambda.csproj" />
     <ProjectReference Include="..\Natural.Aws.Mock\Natural.Aws.Mock.csproj" />
     <ProjectReference Include="..\Natural.Aws\Natural.Aws.csproj" />

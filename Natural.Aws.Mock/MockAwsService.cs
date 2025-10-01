@@ -12,6 +12,12 @@ namespace Natural.Aws
         /// <summary>The shared data across instances.</summary>
         private DynamoDB.MockDynamoData m_data = new DynamoDB.MockDynamoData();
 
+        /// <summary>Constructor.</summary>
+        public MockAwsService()
+        {
+            this.DynamoService = new DynamoDB.MockDynamoService(m_data);
+        }
+
         /// <summary>Creates a table.</summary>
         public DynamoDB.MockDynamoTable CreateTable(string tableName)
         {
@@ -22,13 +28,22 @@ namespace Natural.Aws
 
         #endregion
 
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            //
+        }
+
+        #endregion
+
         #region IAwsService implementation
 
-        /// <summar>Creates a disposable DynamoDB service.</summary>
-        public DynamoDB.IDynamoService CreateDynamoService()
-        {
-            return new DynamoDB.MockDynamoService(m_data);
-        }
+        /// <summar>Getter for the DynamoDB service.</summary>
+        public DynamoDB.IDynamoService DynamoService { get; private set; }
+
+        /// <summar>Getter for the S3 service.</summary>
+        public S3.IS3Service S3Service { get { return null; } }
 
         #endregion
     }
