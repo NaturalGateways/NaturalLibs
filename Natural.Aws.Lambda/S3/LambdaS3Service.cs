@@ -57,6 +57,22 @@ namespace Natural.Aws.S3
             return $"https://{bucketName}.s3.{regionName}.amazonaws.com/{key}";
         }
 
+        /// <summary>Getter for a presigned URL for the given object.</summary>
+        public async Task<string> GetPresignedObjectUrlAsync(string bucketName, string key, TimeSpan? duration)
+        {
+            // Default timespan
+            if (duration.HasValue == false)
+                duration = new TimeSpan(0, 15, 0);
+            // Do request
+            Amazon.S3.Model.GetPreSignedUrlRequest request = new Amazon.S3.Model.GetPreSignedUrlRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                Expires = DateTime.UtcNow.Add(duration.Value)
+            };
+            return await m_s3Client.GetPreSignedURLAsync(request);
+        }
+
         /// <summary>Uploads an object to S3.</summary>
         public async Task UploadObjectAsync(string sourceFilepath, string destBucketName, string destKey)
         {
