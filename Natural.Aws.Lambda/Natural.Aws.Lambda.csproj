@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Natural.Aws\Natural.Aws.csproj" />
-    <ProjectReference Include="..\Natural.Common\Natural.Common.csproj" />
   </ItemGroup>
 
 </Project>

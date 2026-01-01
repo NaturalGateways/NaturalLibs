@@ -9,7 +9,6 @@
     <ProjectReference Include="..\Natural.Aws.Lambda\Natural.Aws.Lambda.csproj" />
     <ProjectReference Include="..\Natural.Aws.Mock\Natural.Aws.Mock.csproj" />
     <ProjectReference Include="..\Natural.Aws\Natural.Aws.csproj" />
-    <ProjectReference Include="..\Natural.Common\Natural.Common.csproj" />
     <ProjectReference Include="..\Natural.Json\Natural.Json.csproj" />
   </ItemGroup>
 
