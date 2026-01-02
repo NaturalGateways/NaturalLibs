@@ -60,7 +60,7 @@ namespace Natural.Aws.S3
         /// <summary>Getter for the data of an S3 object, writing it to a stream.</summary>
         public async Task ReadObjectToStreamAsync(string bucketName, string key, Stream stream)
         {
-            Amazon.S3.Model.GetObjectResponse response = await m_s3Client.GetObjectAsync("naturalfacade", key);
+            Amazon.S3.Model.GetObjectResponse response = await m_s3Client.GetObjectAsync(bucketName, key);
             await response.ResponseStream.CopyToAsync(stream);
         }
 
