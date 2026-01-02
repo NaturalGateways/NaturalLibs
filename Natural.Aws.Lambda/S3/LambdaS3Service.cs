@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,6 +50,27 @@ namespace Natural.Aws.S3
 
         #region IS3Service implementation
 
+        /// <summary>Getter for an object to interact with just a bucket.</summary>
+        public IS3Bucket GetBucket(string bucketName)
+        {
+            return new LambdaS3Bucket(this, bucketName);
+        }
+
+        /// <summary>Getter for a list of keys for objects under a prefix.</summary>
+        public async Task<string[]> ListObjectsAsync(string bucketName, string keyPrefix)
+        {
+            Amazon.S3.Model.ListObjectsV2Request request = new Amazon.S3.Model.ListObjectsV2Request
+            {
+                BucketName = bucketName
+            };
+            if (string.IsNullOrEmpty(keyPrefix) == false)
+            {
+                request.Prefix = keyPrefix;
+            }
+            Amazon.S3.Model.ListObjectsV2Response response = await m_s3Client.ListObjectsV2Async(request);
+            return response.S3Objects.Select(x => x.Key).ToArray();
+        }
+
         /// <summary>Getter for an unsigned URL of an S3 object.</summary>
         public string GetObjectUrl(string bucketName, string key)
         {
@@ -65,7 +86,7 @@ namespace Natural.Aws.S3
         }
 
         /// <summary>Getter for a presigned URL for the given object.</summary>
-        public async Task<string> GetPresignedObjectUrlAsync(string bucketName, string key, TimeSpan? duration)
+        public async Task<string> GetPresignedObjectUrlAsync(string bucketName, string key, TimeSpan? duration = null)
         {
             // Default timespan
             if (duration.HasValue == false)
@@ -125,6 +146,12 @@ namespace Natural.Aws.S3
                 ContentBody = sourceJsonString
             };
             await m_s3Client.PutObjectAsync(request);
+        }
+
+        /// <summary>Deletes an object.</summary>
+        public async Task DeleteObjectAsync(string bucketName, string key)
+        {
+            await m_s3Client.DeleteObjectAsync(bucketName, key);
         }
 
         #endregion
