@@ -95,6 +95,16 @@ namespace Natural.Aws.S3
         /// <summary>Uploads an object to S3.</summary>
         public async Task UploadObjectStreamAsync(Stream sourceStream, string destBucketName, string destKey)
         {
+            // Amazon needs to seek, so cread to memory buffer if it can't seek
+            if (sourceStream.CanSeek == false)
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                await sourceStream.CopyToAsync(memoryStream);
+                memoryStream.Seek(0L, SeekOrigin.Begin);
+                sourceStream = memoryStream;
+            }
+
+            // Upload
             Amazon.S3.Model.PutObjectRequest request = new Amazon.S3.Model.PutObjectRequest
             {
                 BucketName = destBucketName,
