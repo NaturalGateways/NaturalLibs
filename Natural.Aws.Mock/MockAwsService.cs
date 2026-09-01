@@ -16,6 +16,7 @@ namespace Natural.Aws
         public MockAwsService()
         {
             this.DynamoService = new DynamoDB.MockDynamoService(m_data);
+            this.CloudWatchService = new CloudWatch.MockCloudWatchService();
         }
 
         /// <summary>Creates a table.</summary>
@@ -44,6 +45,9 @@ namespace Natural.Aws
 
         /// <summar>Getter for the S3 service.</summary>
         public S3.IS3Service S3Service { get { return null; } }
+
+        /// <summar>Getter for the CloudWatch service.</summary>
+        public CloudWatch.ICloudWatchService CloudWatchService { get; private set; }
 
         #endregion
     }

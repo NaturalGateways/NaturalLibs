@@ -16,6 +16,8 @@ namespace Natural.Aws
         private DynamoDB.IDynamoService m_dynamoService = null;
         /// <summary>The S3 service.</summary>
         private S3.IS3Service m_s3Service = null;
+        /// <summary>The CloudWatch service.</summary>
+        private CloudWatch.LambdaCloudWatchService m_cloudWatchService = null;
 
         /// <summary>Constructor.</summary>
         public LambdaAwsService()
@@ -47,6 +49,8 @@ namespace Natural.Aws
                     m_dynamoService = null;
                     m_s3Service?.Dispose();
                     m_s3Service = null;
+                    m_cloudWatchService?.Dispose();
+                    m_cloudWatchService = null;
                 }
                 m_disposed = true;
             }
@@ -85,6 +89,22 @@ namespace Natural.Aws
                         m_s3Service = new S3.LambdaS3Service();
                 }
                 return m_s3Service;
+            }
+        }
+
+        /// <summar>Getter for the CloudWatch service.</summary>
+        public CloudWatch.ICloudWatchService CloudWatchService
+        {
+            get
+            {
+                if (m_cloudWatchService == null)
+                {
+                    if (m_accessCredentials != null)
+                        m_cloudWatchService = new CloudWatch.LambdaCloudWatchService(m_accessCredentials);
+                    else
+                        m_cloudWatchService = new CloudWatch.LambdaCloudWatchService();
+                }
+                return m_cloudWatchService;
             }
         }
 

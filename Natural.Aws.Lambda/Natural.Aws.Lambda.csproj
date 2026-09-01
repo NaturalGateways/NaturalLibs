@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.CloudWatchLogs" Version="4.0.104" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.6.6" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.7.7" />
   </ItemGroup>
@@ -15,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Natural.Aws\Natural.Aws.csproj" />
     <ProjectReference Include="..\Natural.Common\Natural.Common.csproj" />
+    <ProjectReference Include="..\Natural.Json\Natural.Json.csproj" />
   </ItemGroup>
 
 </Project>

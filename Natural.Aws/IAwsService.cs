@@ -12,5 +12,8 @@ namespace Natural.Aws
 
         /// <summar>Getter for the S3 service.</summary>
         S3.IS3Service S3Service { get; }
+
+        /// <summar>Getter for the CloudWatch service.</summary>
+        CloudWatch.ICloudWatchService CloudWatchService { get; }
     }
 }
