@@ -159,6 +159,19 @@ namespace Natural.Aws.S3
             await m_s3Client.PutObjectAsync(request);
         }
 
+        /// <summary>Copies an object within S3.</summary>
+        public async Task CopyObjectAsync(string sourceBucketName, string sourceKey, string destBucketName, string destKey)
+        {
+            Amazon.S3.Model.CopyObjectRequest request = new Amazon.S3.Model.CopyObjectRequest
+            {
+                SourceBucket = sourceBucketName,
+                SourceKey = sourceKey,
+                DestinationBucket = destBucketName,
+                DestinationKey = destKey
+            };
+            await m_s3Client.CopyObjectAsync(request);
+        }
+
         /// <summary>Deletes an object.</summary>
         public async Task DeleteObjectAsync(string bucketName, string key)
         {

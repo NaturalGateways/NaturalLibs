@@ -32,6 +32,9 @@ namespace Natural.Aws.S3
         /// <summary>Uploads an object to S3.</summary>
         Task UploadObjectJsonStringAsync(string sourceJsonString, string destKey);
 
+        /// <summary>Copies an object within S3.</summary>
+        Task CopyObjectAsync(string sourceKey, string destKey);
+
         /// <summary>Deletes an object.</summary>
         Task DeleteObjectAsync(string key);
     }

@@ -76,6 +76,12 @@ namespace Natural.Aws.S3
             await m_s3Service.UploadObjectJsonStringAsync(sourceJsonString, m_bucketName, destKey);
         }
 
+        /// <summary>Copies an object within S3.</summary>
+        public async Task CopyObjectAsync(string sourceKey, string destKey)
+        {
+            await m_s3Service.CopyObjectAsync(m_bucketName, sourceKey, m_bucketName, destKey);
+        }
+
         /// <summary>Deletes an object.</summary>
         public async Task DeleteObjectAsync(string key)
         {
