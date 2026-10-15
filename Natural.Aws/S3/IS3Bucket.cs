@@ -17,6 +17,9 @@ namespace Natural.Aws.S3
         /// <summary>Getter for the data of an S3 object, writing it to a stream.</summary>
         Task ReadObjectToStreamAsync(string key, Stream stream);
 
+        /// <summary>Getter for the data of an S3 object, passing a readable string to a parameterised action.</summary>
+        Task ReadObjectToActionStreamAsync(string key, Action<Stream> streamCallback);
+
         /// <summary>Getter for a presigned URL for the given object.</summary>
         Task<string> GetPresignedObjectUrlAsync(string key, TimeSpan? duration = null);
 

@@ -46,6 +46,12 @@ namespace Natural.Aws.S3
             await m_s3Service.ReadObjectToStreamAsync(m_bucketName, key, stream);
         }
 
+        /// <summary>Getter for the data of an S3 object, passing a readable string to a parameterised action.</summary>
+        public async Task ReadObjectToActionStreamAsync(string key, Action<Stream> streamCallback)
+        {
+            await m_s3Service.ReadObjectToActionStreamAsync(m_bucketName, key, streamCallback);
+        }
+
         /// <summary>Getter for a presigned URL for the given object.</summary>
         public async Task<string> GetPresignedObjectUrlAsync(string key, TimeSpan? duration = null)
         {

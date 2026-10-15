@@ -81,8 +81,19 @@ namespace Natural.Aws.S3
         /// <summary>Getter for the data of an S3 object, writing it to a stream.</summary>
         public async Task ReadObjectToStreamAsync(string bucketName, string key, Stream stream)
         {
-            Amazon.S3.Model.GetObjectResponse response = await m_s3Client.GetObjectAsync(bucketName, key);
-            await response.ResponseStream.CopyToAsync(stream);
+            using (Amazon.S3.Model.GetObjectResponse response = await m_s3Client.GetObjectAsync(bucketName, key))
+            {
+                await response.ResponseStream.CopyToAsync(stream);
+            }
+        }
+
+        /// <summary>Getter for the data of an S3 object, passing a readable string to a parameterised action.</summary>
+        public async Task ReadObjectToActionStreamAsync(string bucketName, string key, Action<Stream> streamCallback)
+        {
+            using (Amazon.S3.Model.GetObjectResponse response = await m_s3Client.GetObjectAsync(bucketName, key))
+            {
+                streamCallback.Invoke(response.ResponseStream);
+            }
         }
 
         /// <summary>Getter for a presigned URL for the given object.</summary>
