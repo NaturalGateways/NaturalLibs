@@ -7,6 +7,29 @@ namespace Natural.Json
 {
     public static class JsonHelper
     {
+        #region Static vars
+
+        /// <summary>Serialiser settings for hiding null values.</summary>
+        private static JsonSerializerSettings s_serialiserSettings = null;
+        /// <summary>Serialiser settings for hiding null values.</summary>
+        private static JsonSerializerSettings SerialiserSettings
+        {
+            get
+            {
+                if (s_serialiserSettings == null)
+                {
+                    s_serialiserSettings = new JsonSerializerSettings
+                    {
+                        Formatting = Formatting.None,
+                        NullValueHandling = NullValueHandling.Ignore
+                    };
+                }
+                return s_serialiserSettings;
+            }
+        }
+
+        #endregion
+
         #region Public facade
 
         /// <summary>Serialises the given object. Returning null when object is null.</summary>
@@ -14,7 +37,7 @@ namespace Natural.Json
         {
             if (objectValue == null)
                 return null;
-            return JsonConvert.SerializeObject(objectValue);
+            return JsonConvert.SerializeObject(objectValue, JsonHelper.SerialiserSettings);
         }
 
         /// <summary>Serialises the given object. Returning null when object is null.</summary>
